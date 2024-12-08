@@ -1,0 +1,15 @@
+.container{
+  display: flex;
+  width: 100%;
+  padding: .8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.exit{
+  outline: none;
+  cursor: pointer;
+  border: none;
+}

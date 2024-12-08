@@ -1,0 +1,48 @@
+/* components/CreateBookModal/CreateBookModal.module.css */
+/* components/UpdateBookModal/UpdateBookModal.module.css */
+
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.formGroup input,
+.formGroup select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  border-color: #3498db; /* Azul para foco */
+}
+
+.submitButton {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #3498db;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submitButton:hover {
+  background-color: #2980b9; /* Azul mais escuro para hover */
+}

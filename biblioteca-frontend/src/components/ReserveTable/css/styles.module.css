@@ -1,0 +1,38 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.headerRow {
+  background-color: #f3f3f3;
+}
+
+.cell, .headerCell {
+  padding: 8px 12px;
+}
+
+.headerCell {
+  font-weight: bold;
+}
+
+.greenText {
+  color: #28a745;
+}
+
+.orangeText {
+  color: #fd7e14;
+}
+
+.redText {
+  color: #dc3545;
+}
+
+.grayText {
+  color: #6c757d;
+}
+
+.scrollable {
+  width: 100%;
+  overflow-x: auto;
+}

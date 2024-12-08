@@ -1,0 +1,44 @@
+/* Estilo para o LinkButton */
+.link {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  font-size: .8rem;
+  color: #000;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.link:hover {
+  border: 1px solid #007aff;
+}
+
+/* Estilo para o RegularButton */
+.regular {
+  font-size: 1rem;
+  padding: 8px 16px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.regular:hover:not(:disabled) {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+.regular:disabled {
+  background-color: #ccc;
+  border-color: #aaa;
+  cursor: not-allowed;
+}
+
+.regular:disabled:hover {
+  background-color: #ccc;
+  border-color: #aaa;
+}

@@ -1,0 +1,54 @@
+.shortContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.8rem;
+}
+
+.shortAccountName {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--rich-black);
+}
+
+.shortContainer img {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.expandedContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 0.8rem;
+}
+
+.expandedContainer img {
+  width: .8rem;
+  height: .8rem;
+  border-radius: 0.8rem;
+  object-fit: cover;
+}
+
+.accountInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.expandedAccountName {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.expandedLocation {
+  font-size: .7rem;
+  color: #666;
+  margin: 0;
+}

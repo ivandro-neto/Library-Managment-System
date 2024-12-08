@@ -1,0 +1,37 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: .8rem;
+
+}
+
+.headerRow {
+  background-color: #f3f3f3;
+}
+
+.cell, .headerCell {
+  padding: 1rem;
+}
+
+.headerCell {
+  font-weight: bold;
+}
+
+.icon {
+  margin-right: 8px;
+  font-size: .8rem;
+}
+
+.scrollable {
+  overflow-x: auto;
+}
+
+.cell {
+  color: #333;
+}
+
+.cell:first-child {
+  display: flex;
+  align-items: center;
+}

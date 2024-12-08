@@ -1,0 +1,28 @@
+.page {
+  display: flex;
+  width: 100%;
+  height: auto;
+  flex-direction: column;
+  gap: 2rem;
+
+}
+
+.group {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.groupTitle {
+  display: inline-block;
+  background-color: #cacaca;
+  padding: 6px 12px;
+  font-size: .8rem;
+  font-weight: bold;
+  border-radius: 4px;
+  color: #333;
+}
+

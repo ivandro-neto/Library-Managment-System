@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  height: 100dvh; /* Preenche toda a altura da janela */
+  width: 100dvw; /* Preenche toda a largura da janela */
+  overflow: hidden;
+}
+
+.mainContainer{
+  flex: 1; /* Faz com que o main ocupe todo o espaço restante */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.main {
+  overflow-y: auto; /* Adiciona rolagem caso o conteúdo ultrapasse a altura da tela */
+  padding: 1rem;
+  width: 100%;
+  background-color: #f9f9f9; /* Cor de fundo para o main */
+}
+.header{
+  position: sticky;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}

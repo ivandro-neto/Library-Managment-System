@@ -1,5 +1,7 @@
 import Book from "../models/Book";
 import type { Request, Response } from "express";
+import Notification from "../models/Notification";
+import User from "../models/User";
 
 // Listar todos os livros
 export const getBooks = async (req: Request, res: Response) => {
@@ -40,17 +42,37 @@ export const createBook = async (req: Request, res: Response) => {
   const { title, author, description, isbn, status, releaseDate } = req.body;
 
   try {
+    // Verificar se o livro já existe
     const bookExists = await Book.findOne({ where: { title } });
 
     if (bookExists) {
       return res.status(400).json({ status: 400, message: "Book with this title already exists." });
     }
-  
-    const newBook = await Book.create({ title,author,isbn, status, description , releaseDate });
-    res.status(201).json({ status: 201, message: "Book created successfully.", data: { newBook } });
+
+    // Criar o livro
+    const newBook = await Book.create({
+      title,
+      author,
+      isbn,
+      status,
+      description,
+      releaseDate
+    });
+
+    // Enviar a resposta com o livro criado
+    res.status(201).json({
+      status: 201,
+      message: "Book created successfully.",
+      data: { newBook }
+    });
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ status: 500, message: "Error creating book.", error: error.message });
+    res.status(500).json({
+      status: 500,
+      message: "Error creating book.",
+      error: error.message
+    });
   }
 };
 

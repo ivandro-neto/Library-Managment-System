@@ -6,19 +6,27 @@ import waitlistRoutes from './routes/waitlist-routes'
 import notificationRoutes from './routes/notification-routes'
 import loanRoutes from './routes/loan-routes'
 import authRoutes from './routes/auth-routes'
+import cron from 'node-cron';
 import cors from "cors";
+import { checkOverdueLoans } from './models/Notification'
 
 const app = express()
 
 app.use(express.json())
 app.use(cors({ origin: '*' }));
 
+cron.schedule('0 0 * * *', () => {
+  console.log('Checking for overdue loans...');
+  checkOverdueLoans();
+});
 app.use('/api/auth', authRoutes)
 app.use('/api', userRoutes)
 app.use('/api', bookRoutes)
 app.use('/api', loanRoutes)
 app.use('/api', waitlistRoutes)
 app.use("/api", notificationRoutes);
+
+
 
 
 const PORT = 3000

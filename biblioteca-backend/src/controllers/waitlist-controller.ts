@@ -1,10 +1,12 @@
-import Waitlist from "../models/Waitlist";
+import { where } from "sequelize";
 import type { Request, Response } from "express";
+import Waitlist from "../models/WaitList";
 
 // Listar todos os usuários na lista de espera
 export const getWaitlistEntries = async (req: Request, res: Response) => {
+  const {id} = req.params;
   try {
-    const waitlist = await Waitlist.findAll();
+    const waitlist = await Waitlist.findAll({where:{bookId: id}});
 
     if (waitlist.length === 0) {
       return res.status(404).json({ status: 404, message: "No waitlist entries found." });

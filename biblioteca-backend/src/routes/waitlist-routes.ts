@@ -9,7 +9,7 @@ import {
 
 const router = Router();
 
-router.get("/waitlist", getWaitlistEntries);
+router.get("/waitlist/:id", getWaitlistEntries);
 router.get("/waitlist/:id", getWaitlistEntryById);
 router.post("/waitlist", createWaitlistEntry);
 router.put("/waitlist/:id", updateWaitlistEntry);

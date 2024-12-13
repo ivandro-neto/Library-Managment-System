@@ -2,8 +2,7 @@ import { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Roles } from "../../utils/Roles";
-import styles from './css/styles.module.css'
-
+import styles from "./css/styles.module.css";
 
 const LoginPage: React.FC = () => {
   const { login, user } = useContext(AuthContext);
@@ -17,27 +16,30 @@ const LoginPage: React.FC = () => {
     setError(null);
     try {
       await login(email, password);
-      if(user?.roles[0] === Roles.user){
-          navigate("/library"); // Redirecione para uma rota segura
-        }else{
-          navigate("/admin/library"); // Redirecione para uma rota segura
-        }
-        
+
+      if (user?.roles.includes(Roles.user)) {
+        navigate("/library");
+      } else if (user?.roles.includes(Roles.admin)) {
+        navigate("/admin/library");
+      } else {
+        setError("Invalid role assigned to the user.");
+      }
     } catch (error) {
       setError("Login failed. Check your credentials.");
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleLogin}>
+    <div className={styles.container}>
+      <form onSubmit={handleLogin} className={styles.form}>
         <h2>Login</h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className={styles.error}>{error}</p>}
         <input
           type="email"
-          placeholder="email"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className={styles.input}
           required
         />
         <input
@@ -45,10 +47,24 @@ const LoginPage: React.FC = () => {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className={styles.input}
           required
         />
-        <button type="submit">Login</button>
+        <button type="submit" className={styles.button}>
+          Login
+        </button>
       </form>
+
+      <p>
+        Create a new account?{" "}
+        <button
+          type="button"
+          onClick={() => navigate("/register")}
+          className={styles.link}
+        >
+          Register
+        </button>
+      </p>
     </div>
   );
 };

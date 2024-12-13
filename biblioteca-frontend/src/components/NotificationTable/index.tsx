@@ -1,10 +1,9 @@
 import styles from "./css/styles.module.css";
 
 type Notification = {
-  type: "Atraso na entrega" | "Livro disponível";
-  bookTitle: string;
-  description: string;
-  icon: string; // Emoji representando o ícone
+  type: "info" | "warn";
+  title: string;
+  message: string;
 };
 
 type NotificationsTableProps = {
@@ -18,18 +17,16 @@ const NotificationsTable: React.FC<NotificationsTableProps> = ({ data }) => {
         <thead>
           <tr className={styles.headerRow}>
             <th className={styles.headerCell}>Notification</th>
-            <th className={styles.headerCell}>Book title</th>
-            <th className={styles.headerCell}>Description</th>
+            <th className={styles.headerCell}>Message</th>
           </tr>
         </thead>
         <tbody>
           {data.map((notification, index) => (
             <tr key={index}>
               <td className={styles.cell}>
-                <span className={styles.icon}><img src={notification.icon} alt="" /></span> {notification.type}
+                <span className={styles.icon}><img src={notification.type === "info"? "/icons/info.svg":"/icons/warn.svg"} alt="" /></span> {notification.title}
               </td>
-              <td className={styles.cell}>{notification.bookTitle}</td>
-              <td className={styles.cell}>{notification.description}</td>
+              <td className={styles.cell}>{notification.message}</td>
             </tr>
           ))}
         </tbody>

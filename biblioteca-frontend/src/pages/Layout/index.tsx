@@ -4,6 +4,7 @@ import styles from './css/styles.module.css'
 import SearchBar from '../../components/SearchInput';
 interface ILayoutProps{
   children : ReactNode;
+  
 }
 
 
@@ -16,9 +17,6 @@ const Layout: React.FC<ILayoutProps> = ({children}) => {
     <div className={styles.container}>
       <SideNav/>
       <div className={styles.mainContainer}>
-        <div className={styles.header}>
-          <SearchBar onSearch={handleSearch}/>
-        </div>
       <main className={styles.main}>
         {children}
       </main>

@@ -1,0 +1,71 @@
+/* Container geral */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  color: #0a0a0a;
+  font-family: "Arial", sans-serif;
+}
+
+/* Área de conteúdo */
+.content {
+  text-align: center;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Título principal */
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+/* Descrição */
+.description {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* Container para os botões */
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Botão principal */
+.button {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #475bcc;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #4c4fe5;
+}
+
+/* Botão com contorno */
+.buttonOutline {
+  padding: 0.8rem 1.5rem;
+  border: 1px solid #999999;
+  border-radius: 5px;
+  color: #000000;
+  outline: none;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+

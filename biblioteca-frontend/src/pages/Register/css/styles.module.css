@@ -8,7 +8,7 @@
 }
 
 .form {
-  background: #c9c9c9;
+  background: #cecccc;
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -24,10 +24,21 @@
   font-weight: bold;
 }
 
+.inputGroup {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.inputGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
 .input {
   width: 100%;
   padding: 0.8rem;
-  margin: 0.5rem 0;
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
@@ -35,18 +46,29 @@
 }
 
 .input:focus {
-  border-color: #6a11cb;
+  border-color: #5f6fff;
   outline: none;
-  box-shadow: 0 0 5px rgba(106, 17, 203, 0.2);
+  box-shadow: 0 0 5px rgba(255, 126, 95, 0.2);
+}
+
+.checkboxGroup {
+  text-align: left;
+  margin: 1rem 0;
+}
+
+.checkboxGroup label {
+  font-size: 0.9rem;
+  color: #555;
+  display: block;
+  margin: 0.3rem 0;
 }
 
 .button {
   width: 100%;
   padding: 0.8rem;
-  margin-top: 1rem;
   border: none;
   border-radius: 5px;
-  background-color: #2a28c5;
+  background-color: #5f6aff;
   color: #fff;
   font-size: 1rem;
   font-weight: bold;
@@ -55,7 +77,14 @@
 }
 
 .button:hover {
-  background-color: #22399e;
+  background-color: #4c56e5;
+}
+
+.link {
+  color: #5f9fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 1rem;
 }
 
 .error {
@@ -63,9 +92,9 @@
   font-size: 0.9rem;
   margin-bottom: 1rem;
 }
-.link {
-  color: #5f9fff;
-  cursor: pointer;
+
+.success {
+  color: #4caf50;
   font-size: 0.9rem;
-  margin-top: 1rem;
+  margin-bottom: 1rem;
 }

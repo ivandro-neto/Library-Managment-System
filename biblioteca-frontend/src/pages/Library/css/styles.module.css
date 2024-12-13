@@ -5,3 +5,11 @@
   gap: 1rem;
   flex-wrap: wrap;
 }
+
+.header{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}

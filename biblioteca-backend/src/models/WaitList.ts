@@ -54,7 +54,8 @@ Waitlist.init(
     position:{
       type: DataTypes.INTEGER,
       allowNull: false,
-      autoIncrement: true
+      autoIncrement: true,
+      defaultValue: 0
     },
     addedAt: {
       type: DataTypes.DATE,

@@ -14,7 +14,7 @@ const BookContainer = ({url, image, title, author, status, onReserve }: BookCont
   return (
     <div className={styles.container}>
       <div className={styles.imageContainer}>
-        <img src={image} alt={title} loading="lazy" className={styles.image} />
+        <img src={"/icons/hashtag.svg"} alt={title} loading="lazy" className={styles.image} />
       </div>
       <div className={styles.details}>
         <p className={styles.title}>{title} - {author}</p>
@@ -24,9 +24,8 @@ const BookContainer = ({url, image, title, author, status, onReserve }: BookCont
           </span>
           <LinkButton url={`/book/${url}`} content={"View"}/>
           <RegularButton
-            content="Reserve"
+            content={status === 'available'? "Reserve" : "Join to waitlist"}
             action={onReserve}
-            disabled={status !== 'available'} // Disable button if the book is unavailable
           />
         </div>
       </div>

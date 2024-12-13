@@ -1,5 +1,7 @@
+import Book from "../models/Book";
 import Loan from "../models/Loan";
 import type { Request, Response } from "express";
+import Waitlist from "../models/WaitList";
 
 // Listar todos os empréstimos
 export const getLoans = async (req: Request, res: Response) => {
@@ -9,6 +11,7 @@ export const getLoans = async (req: Request, res: Response) => {
     if (loans.length === 0) {
       return res.status(404).json({ status: 404, message: "No loans found." });
     }
+    
 
     res.status(200).json({ status: 200, data: { loans } });
   } catch (error) {
@@ -17,6 +20,23 @@ export const getLoans = async (req: Request, res: Response) => {
   }
 };
 
+// Obter um empréstimo por ID
+export const getLoanByUserId = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+
+  try {
+    const loan = await Loan.findAll({where: { userId}});
+
+    if (!loan) {
+      return res.status(404).json({ status: 404, message: "Loan not found." });
+    }
+
+    res.status(200).json({ status: 200, data: { loan } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: 500, message: "Error fetching the loan.", error: error.message });
+  }
+};
 // Obter um empréstimo por ID
 export const getLoanById = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -36,20 +56,57 @@ export const getLoanById = async (req: Request, res: Response) => {
 };
 
 // Criar um novo empréstimo
+
 export const createLoan = async (req: Request, res: Response) => {
-  const { userId, bookId,dueDate } = req.body;
+  const { userId, bookId, dueDate } = req.body;
 
   try {
-    const newLoan = await Loan.create({
-      userId,
-      bookId,
-      dueDate,
-    });
+    // Verificar se o livro existe
+    const book = await Book.findByPk(bookId);
+    if (!book) {
+      return res.status(404).json({
+        status: 404,
+        message: "Book not found.",
+      });
+    }
 
-    res.status(201).json({ status: 201, message: "Loan created successfully.", data: { newLoan } });
+    // Verificar se o livro está disponível
+    if (book.status === 'unavailable') {
+      // Adicionar à lista de espera
+      const newEntry = await Waitlist.create({
+        userId,
+        bookId,
+      });
+      
+      return res.status(201).json({
+        status: 201,
+        message: "You joined the waitlist for this book.",
+        data: { newEntry },
+      });
+    } else {
+      // Criar empréstimo
+      const newLoan = await Loan.create({
+        userId,
+        bookId,
+        dueDate,
+      });
+
+      // Atualizar o status do livro
+      await book.update({ status: "unavailable" });
+      
+      return res.status(201).json({
+        status: 201,
+        message: "Loan created successfully.",
+        data: { newLoan },
+      });
+    }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ status: 500, message: "Error creating loan.", error: error.message });
+    return res.status(500).json({
+      status: 500,
+      message: "Error creating loan.",
+      error: error.message,
+    });
   }
 };
 

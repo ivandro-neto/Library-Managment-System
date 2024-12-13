@@ -16,7 +16,7 @@ const BookCard: React.FC<BookCardProps> = ({ isAdmin, title, author, isAvailable
   return (
     <div className={styles.card}>
        <div className={styles.imageContainer}>
-        <img src={imageUrl} alt={title} loading="lazy" className={styles.image} />
+        <img src={"/icons/hashtag.svg"} alt={title} loading="lazy" className={styles.image} />
       </div>
       <div className={styles.info}>
         <h2>{title} - <span className={styles.author}>{author}</span></h2>
@@ -28,7 +28,9 @@ const BookCard: React.FC<BookCardProps> = ({ isAdmin, title, author, isAvailable
             <RegularButton action={onReserve} content={"Reserve"}/>
           ): <></>}
         </div>
-        <p className={styles.description}>{description}</p>
+        <div className={styles.description}>
+          <p>{description}</p>
+        </div>
       </div>
     </div>
   );

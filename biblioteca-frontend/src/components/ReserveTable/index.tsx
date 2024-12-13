@@ -1,7 +1,10 @@
+import { Link } from "react-router-dom";
 import styles from "./css/styles.module.css";
 
 type Reservation = {
-  book: string;
+  id: string;
+  bookId: string;
+  bookTitle: string;
   status: "Reserved" | "waiting" | "Returned";
   dueDate: string;
   remainingDays: string;
@@ -22,6 +25,24 @@ const getStatusClass = (status: string): string => {
       return styles.grayText;
     default:
       return "";
+  }
+};
+const calculateRemainingDays = (dueDate: string): string => {
+  const dueDateObj = new Date(dueDate); // Converte a data de entrega para um objeto Date
+  const today = new Date(); // Obtém a data atual
+
+  // Calcula a diferença em milissegundos
+  const differenceInMs = dueDateObj.getTime() - today.getTime();
+
+  // Converte a diferença para dias
+  const differenceInDays = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
+
+  if (differenceInDays > 0) {
+    return `${differenceInDays} days left`;
+  } else if (differenceInDays === 0) {
+    return "Due today";
+  } else {
+    return `${Math.abs(differenceInDays)} days late`;
   }
 };
 
@@ -45,15 +66,19 @@ const ReservationTable: React.FC<ReservationTableProps> = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((reservation, index) => (
-            <tr key={index}>
-              <td className={styles.cell}>{reservation.book}</td>
+        {data.map((reservation) => (
+            <tr key={reservation.id}>
+              <td className={styles.cell}>
+                <Link to={`/book/${reservation.bookId}`}>
+                  {reservation.bookTitle}
+                </Link>
+                </td>
               <td className={`${styles.cell} ${getStatusClass(reservation.status)}`}>
                 {reservation.status}
               </td>
               <td className={styles.cell}>{reservation.dueDate}</td>
-              <td className={`${styles.cell} ${getRemainingDaysClass(reservation.remainingDays)}`}>
-                {reservation.remainingDays}
+              <td className={`${styles.cell} ${getRemainingDaysClass(calculateRemainingDays(reservation.dueDate))}`}>
+                {calculateRemainingDays(reservation.dueDate)}
               </td>
               <td className={styles.cell}>{reservation.deliveryCode}</td>
             </tr>

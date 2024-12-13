@@ -8,33 +8,73 @@ import { AuthContext } from "../../context/AuthContext";
 import { Roles } from "../../utils/Roles";
 import axios from "axios";
 
-
-
 const BookPage = () => {
   const { id } = useParams<{ id: string }>();
-  const {user, accessToken} = useContext(AuthContext) 
-  const[book, setBook] = useState(null);
-  
-  useEffect(()=>{
+  const { user, accessToken } = useContext(AuthContext);
+  const [book, setBook] = useState(null);
+  const [waitlist, setWaitlist] = useState(null);
+
+  useEffect(() => {
     async function fetchData() {
-      
       try {
-        const response = await axios.get(`http://localhost:3000/api/books/${id}`,{
-          headers: {
-            'Authorization': `Bearer ${accessToken}`, // Adicionando o token no header
+        // Busca do livro
+        const response = await axios.get(
+          `http://localhost:3000/api/books/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           },
-        });
-       
-        setBook(response.data.data.book)
+        );
+        if (user?.roles[0] === Roles.admin) {
+          // Busca da lista de espera
+          const result = await axios.get(
+            `http://localhost:3000/api/waitlist/${id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            },
+          );
+
+          // Resolução dos usuários na lista de espera
+          const list = await Promise.all(
+            result.data.data.waitlist.map(async (waiter) => {
+              try {
+                const userResponse = await axios.get(
+                  `http://localhost:3000/api/users/${waiter.userId}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`,
+                    },
+                  },
+                );
+                return {
+                  ...waiter,
+                  username: userResponse.data.data.user.username,
+                };
+              } catch (error) {
+                console.error(`Error fetching user ${waiter.userId}:`, error);
+                return {
+                  ...waiter,
+                  username: "Unknown",
+                }; // Retorna um valor padrão se houver erro
+              }
+            }),
+          );
+          console.log(list)
+          setWaitlist(list);
+        }
+        setBook(response.data.data.book);
       } catch (error) {
         console.error("Error fetching book", error);
         throw new Error("Failed to fetch book.");
       }
     }
     fetchData();
-  }, [])
-  
-  const isAdmin = user?.roles[0] === Roles.admin? true: false;
+  }, []);
+
+  const isAdmin = user?.roles[0] === Roles.admin ? true : false;
 
   if (!book) {
     return <p className={styles.notFound}>Book not found.</p>;
@@ -48,7 +88,7 @@ const BookPage = () => {
     <Layout>
       <div className={styles.page}>
         <BookCard
-          isAdmin = {isAdmin}
+          isAdmin={isAdmin}
           title={book.title}
           author={book.author}
           isAvailable={book.isAvailable}
@@ -60,9 +100,9 @@ const BookPage = () => {
           <div className={styles.waitlistContainer}>
             <h3 className={styles.waitlistTitle}>Waitlist</h3>
             <ul className={styles.waitlist}>
-              {book.waitlist.map((name, index) => (
-                <li key={index} className={styles.waitlistItem}>
-                  {name}
+              {waitlist?.map((waiter) => (
+                <li key={waiter.id} className={styles.waitlistItem}>
+                  {waiter.username}
                 </li>
               ))}
             </ul>

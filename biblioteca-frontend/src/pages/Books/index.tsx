@@ -6,7 +6,9 @@ import UpdateBookModal from "../../components/UpdateBookModal";
 import DeleteBookModal from "../../components/DeleteBookModal";
 import Layout from "../Layout";
 import { AuthContext } from "../../context/AuthContext";
-
+import { Roles } from "../../utils/Roles";
+import SearchBar from "../../components/SearchInput";
+import styles from './css/styles.module.css'
 const apiBaseURL = "http://localhost:3000/api"; // Ajuste conforme necessário
 
 const LibraryPage: React.FC = () => {
@@ -16,7 +18,19 @@ const LibraryPage: React.FC = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<any>(null);
   const { accessToken } = useContext(AuthContext);
+  const [filteredBooks, setFilteredBooks] = useState<any[]>([]);
+  const [query, setQuery] = useState<string>('');
 
+  useEffect(() => {
+    if (!query) {
+      setFilteredBooks(books); // Exibe todos os livros se não houver consulta
+    } else {
+      const results = books.filter((book) =>
+        book.title.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredBooks(results); // Atualiza a lista filtrada
+    }
+  }, [query, books]);
   // Função para carregar os livros da API
   const fetchBooks = async () => {
     try {
@@ -48,6 +62,27 @@ const LibraryPage: React.FC = () => {
           headers: { 'Authorization': `Bearer ${accessToken}` },
         }
       );
+      const result = await axios.get(
+        `${apiBaseURL}/users`,
+        {
+          headers: { 'Authorization': `Bearer ${accessToken}` },
+        }
+      );
+      const commonUsers = result.data.data.users.filter(user => user.roles[0] === Roles.user)
+
+      for (let u = 0; u < commonUsers.length; u++) {
+        
+        
+        const notification = await axios.post(
+          `${apiBaseURL}/notifications`,
+          { userId: commonUsers[u].id, title : "New book added!",message: `Check out the new book called ${title}!`, type: "info" },
+          {
+            headers: { 'Authorization': `Bearer ${accessToken}` },
+          }
+        );
+        console.log("SENT!", notification)
+      }
+
       fetchBooks(); // Recarregar livros após a criação
     } catch (error) {
       console.error("Error creating book:", error);
@@ -85,9 +120,12 @@ const LibraryPage: React.FC = () => {
 
   return (
     <Layout>
+      <div className={styles.header}>
+        <SearchBar onSearch={setQuery} /> {/* Passa a função para atualizar a query */}
+      </div>
       <div>
         <LibraryTable
-          books={books}
+          books={filteredBooks}
           onCreate={() => setIsCreateModalOpen(true)}
           onEdit={(id) => {
             setSelectedBook(books.find((book) => book.id === id));

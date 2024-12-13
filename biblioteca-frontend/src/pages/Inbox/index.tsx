@@ -1,24 +1,15 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Layout from "../Layout";
 import styles from "./css/styles.module.css";
 import NotificationsTable from "../../components/NotificationTable";
+import { AuthContext } from "../../context/AuthContext";
 
 const iconType = (type: string): string => {
   return type === "⚠️" ? "/icons/warn.svg" : "/icons/info.svg";
 };
 
 // Obter notificações da API
-const fetchNotifications = async () => {
-  try {
-    const apiBaseURL = "http://localhost:3000/api";  // Ajuste a URL base conforme necessário
-    const response = await axios.get(`${apiBaseURL}/notifications`);
-    return response.data.data;
-  } catch (error) {
-    console.error("Error fetching notifications:", error);
-    return [];
-  }
-};
 
 const InboxPage: React.FC = () => {
   const [notifications, setNotifications] = useState<Array<{
@@ -29,7 +20,24 @@ const InboxPage: React.FC = () => {
   }>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const {user, accessToken} = useContext(AuthContext)
 
+  const fetchNotifications = async () => {
+    try {
+      const apiBaseURL = "http://localhost:3000/api";  // Ajuste a URL base conforme necessário
+      const response = await axios.get(`${apiBaseURL}/notifications/${user?.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        
+      });
+      return response.data.data.notifications;
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      return [];
+    }
+  };
   useEffect(() => {
     const loadNotifications = async () => {
       setLoading(true);

@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { accessToken, refreshToken } = data;
 
       const decodedToken: any = JSON.parse(atob(accessToken.split(".")[1]));
-      const user = { username: decodedToken.username, email:decodedToken.email, roles: [decodedToken.roles] };
+      const user = { username: decodedToken.username, email:decodedToken.email, roles: decodedToken.roles };
 
       persistAuthData(accessToken, user);
       localStorage.setItem("refreshToken", refreshToken);
@@ -75,7 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data } = await axios.post(`${apiBaseURL}/refresh`, { refreshToken });
       const { accessToken } = data;
       const decodedToken: any = JSON.parse(atob(accessToken.split(".")[1]));
-      const user = {id: decodedToken.sub, username: decodedToken.username, email:decodedToken.email, roles: [decodedToken.roles] };
+      const user = {id: decodedToken.sub, username: decodedToken.username, email:decodedToken.email, roles: decodedToken.roles };
 
       persistAuthData(accessToken, user);
     } catch (error) {

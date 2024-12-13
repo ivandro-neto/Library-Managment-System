@@ -10,12 +10,14 @@ import PrivateRoute from './components/PrivateRoute'; // Certifique-se de import
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/Register';
 import { Roles } from './utils/Roles';
+import HomePage from './pages/Home';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<LoginPage />} />
+        <Route path='/' element={<HomePage />} />
+        <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
         {/* Student routes */}
         <Route path='/library' element={

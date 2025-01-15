@@ -6,7 +6,8 @@ import { Link } from "react-router-dom";
 interface Book {
   id: string;
   title: string;
-  status: "Available" | "Reserved" | "Waiting";
+  quantity: number;
+  status: "available" | "reserved" | "waiting";
   releaseDate: string;
 }
 
@@ -17,7 +18,7 @@ interface LibraryTableProps {
   onDelete: (id: string) => void;
 }
 
-const LibraryTable: React.FC<LibraryTableProps> = ({ books,onCreate, onEdit, onDelete }) => {
+const LibraryTable: React.FC<LibraryTableProps> = ({ books, onCreate, onEdit, onDelete }) => {
   const [book, setBook] = useState(books)
 
 
@@ -35,6 +36,7 @@ const LibraryTable: React.FC<LibraryTableProps> = ({ books,onCreate, onEdit, onD
           <tr>
             <th>Book</th>
             <th>Status</th>
+            <th>Qnt</th>
             <th>Release Date</th>
             <th>Actions</th>
           </tr>
@@ -49,15 +51,16 @@ const LibraryTable: React.FC<LibraryTableProps> = ({ books,onCreate, onEdit, onD
                 </td>
               <td
                 className={`${styles.status} ${
-                  b.status === "Available"
+                  b.status.toLocaleLowerCase() === "available"
                     ? styles.available
-                    : b.status === "Reserved"
+                    : b.status.toLocaleLowerCase() === "reserved"
                     ? styles.reserved
                     : styles.waiting
                 }`}
               >
                 {b.status}
               </td>
+              <td>{b.quantity}</td>
               <td>{b.releaseDate}</td>
               <td className={styles.actions}>
                 <button type="button" className={styles.editButton} onClick={() => onEdit(b.id)}>

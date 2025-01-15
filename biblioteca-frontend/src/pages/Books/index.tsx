@@ -53,15 +53,18 @@ const LibraryPage: React.FC = () => {
   }, [accessToken]);
 
   // Criar livro
-  const handleCreate = async (title: string,author: string, isbn: string, description: string, releaseDate: string) => {
+  const handleCreate = async (title: string, author: string, isbn: string, description: string, quantity: number, releaseDate: string) => {
     try {
-      await axios.post(
+      const response = await axios.post(
         `${apiBaseURL}/books`,
-        { title,author, isbn, description, releaseDate },
+        { title,author, isbn, description, quantity, releaseDate },
         {
           headers: { 'Authorization': `Bearer ${accessToken}` },
         }
       );
+
+      console.log(response)
+
       const result = await axios.get(
         `${apiBaseURL}/users`,
         {
@@ -90,13 +93,14 @@ const LibraryPage: React.FC = () => {
   };
 
   // Atualizar livro
-  const handleUpdate = async (id: string, title: string,author: string, isbn: string, description: string,status: string, releaseDate: string) => {
+  const handleUpdate = async (id: string, title: string, author: string, isbn: string, description: string, quantity:number, status: string, releaseDate: string) => {
     try {
       await axios.put(
         `${apiBaseURL}/books/${id}`,
-        { title,author, isbn, description, status, releaseDate },
+        { title,author, isbn, description, status, quantity, releaseDate },
         { headers: { 'Authorization': `Bearer ${accessToken}` } }
       );
+      handleClose();
       fetchBooks(); // Recarregar livros após a atualização
     } catch (error) {
       console.error("Error updating book:", error);
@@ -117,7 +121,10 @@ const LibraryPage: React.FC = () => {
       console.error("Error deleting book:", error);
     }
   };
-
+  const handleClose = () =>{
+    setIsUpdateModalOpen(false);
+    setSelectedBook(null);
+  }
   return (
     <Layout>
       <div className={styles.header}>
@@ -144,7 +151,7 @@ const LibraryPage: React.FC = () => {
         {selectedBook && (
           <UpdateBookModal
             isOpen={isUpdateModalOpen}
-            onClose={() => setIsUpdateModalOpen(false)}
+            onClose={handleClose}
             book={selectedBook}
             onUpdate={handleUpdate}
           />

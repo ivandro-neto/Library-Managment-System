@@ -74,7 +74,7 @@ export const notifyWaitlist = async (bookId: number) => {
     });
 
     if (waitlistUser) {
-      const userId = waitlistUser.userId;
+      const userId = waitlistUser?.userId;
 
       // Cria a notificação para o usuário
       await Notification.create({

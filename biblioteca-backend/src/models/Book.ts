@@ -9,6 +9,7 @@ interface IBookAttributes {
   isbn: string;
   status: string;
   description: string;
+  quantity: number;
   releaseDate: Date;
 }
 
@@ -61,11 +62,19 @@ Book.init(
         notEmpty: { msg: "The description cannot be empty" },
       },
     },
+    quantity: {
+      type: DataTypes.NUMBER,
+      allowNull: false,
+      defaultValue: 1,
+      validate: {
+        notNull : { msg : "The quantity cannot be null."},
+      }
+    },
     releaseDate: {
       type: DataTypes.DATEONLY, // Use DATEONLY para trabalhar apenas com data (sem horário)
       allowNull: false,
       validate: {
-        isDate: { msg: "The release date must be a valid date" },
+        isDate: { msg: "The release date must be a valid date", args: false },
       },
     },
   },

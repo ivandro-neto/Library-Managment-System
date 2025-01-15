@@ -55,8 +55,8 @@ const LoginPage: React.FC = () => {
         </button>
       </form>
 
-      <p>
-        Create a new account?{" "}
+      <p className={styles.registerLink}>
+        Criar uma nova conta?{" "}
         <button
           type="button"
           onClick={() => navigate("/register")}

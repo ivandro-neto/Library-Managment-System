@@ -8,9 +8,12 @@ const HomePage: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <h1 className={styles.title}>Welcome to the Library App</h1>
+        <h1 className={styles.title}>Bem-vindo a Library App</h1>
         <p className={styles.description}>
-          Manage your library efficiently with our platform. Please log in or register to get started!
+        Gerencie sua biblioteca de forma eficiente com nossa plataforma.
+        </p>
+        <p className={styles.description}>
+        Por favor, faça login ou registre-se para começar!
         </p>
         <div className={styles.buttonContainer}>
           <button

@@ -62,15 +62,15 @@
 }
 
 .available {
-  color: #2563eb;
+  color: #3acb49;
 }
 
 .reserved {
-  color: #22c55e;
+  color: #d62822;
 }
 
 .waiting {
-  color: #f59e0b;
+  color: #f5970b;
 }
 
 .actions {

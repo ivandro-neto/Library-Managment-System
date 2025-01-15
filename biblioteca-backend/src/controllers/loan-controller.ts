@@ -69,7 +69,8 @@ export const createLoan = async (req: Request, res: Response) => {
         message: "Book not found.",
       });
     }
-
+    if(book.quantity <= 0)
+      await book.update({status : 'unavailable'});
     // Verificar se o livro está disponível
     if (book.status === 'unavailable') {
       // Adicionar à lista de espera
@@ -92,7 +93,7 @@ export const createLoan = async (req: Request, res: Response) => {
       });
 
       // Atualizar o status do livro
-      await book.update({ status: "unavailable" });
+      await book.update({ quantity: book.quantity-- });
       
       return res.status(201).json({
         status: 201,

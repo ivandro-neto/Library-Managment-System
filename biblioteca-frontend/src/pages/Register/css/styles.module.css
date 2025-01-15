@@ -1,17 +1,36 @@
 .container {
+  position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
-  width: 100%;
+  align-items: flex-end;
+  height: 100dvh;
+  min-width: 100%;
+  padding: 4rem 6rem;
   flex-direction: column;
+  overflow: hidden;
+
+}
+.container::after{
+  content: '';
+  position: absolute;
+  min-width: 100%;
+  background-color: #475bcc;
+  top: 0;
+  left: 0;
+  height: 100dvh;
+  z-index: -2;
+  transform: rotate(45deg) translate(-15dvw, 60dvh);
+  background: url(/public/bg.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: contrast(150%);
+
 }
 
 .form {
-  background: #cecccc;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  padding: 1rem;
   width: 100%;
   max-width: 400px;
   text-align: center;
@@ -97,4 +116,11 @@
   color: #4caf50;
   font-size: 0.9rem;
   margin-bottom: 1rem;
+}
+.registerLink button{
+  border: none;
+  background-color: transparent;
+}
+.registerLink{
+  text-align: left;
 }

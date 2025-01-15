@@ -26,6 +26,7 @@ const BookPage = () => {
             },
           },
         );
+        setBook(response.data.data.book);
         if (user?.roles[0] === Roles.admin) {
           // Busca da lista de espera
           const result = await axios.get(
@@ -36,10 +37,10 @@ const BookPage = () => {
               },
             },
           );
-
+          
           // Resolução dos usuários na lista de espera
           const list = await Promise.all(
-            result.data.data.waitlist.map(async (waiter) => {
+            result?.data.data.waitlist.map(async (waiter) => {
               try {
                 const userResponse = await axios.get(
                   `http://localhost:3000/api/users/${waiter.userId}`,
@@ -62,10 +63,9 @@ const BookPage = () => {
               }
             }),
           );
-          console.log(list)
           setWaitlist(list);
         }
-        setBook(response.data.data.book);
+        
       } catch (error) {
         console.error("Error fetching book", error);
         throw new Error("Failed to fetch book.");
@@ -91,7 +91,7 @@ const BookPage = () => {
           isAdmin={isAdmin}
           title={book.title}
           author={book.author}
-          isAvailable={book.isAvailable}
+          isAvailable={book.status}
           description={book.description}
           imageUrl={book.imageUrl}
           onReserve={handleReserve}

@@ -121,7 +121,7 @@ const RegisterPage: React.FC = () => {
         </div>
         <button type="submit" className={styles.button}>Register</button>
       </form>
-      <p>
+      <p className={styles.registerLink}>
         Already have an account?{" "}
         <button type="button" onClick={() => navigate("/login")} className={styles.link}>
           Login

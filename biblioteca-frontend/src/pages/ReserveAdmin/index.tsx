@@ -119,9 +119,18 @@ const ReserveAdminPage: React.FC = () => {
   if (error) {
     return (
       <Layout>
-        <div className={styles.page}>
-          <p style={{ color: "red" }}>{error}</p>
+        
+      <div className={styles.page}>
+      <h1 className={styles.title}>Reserves</h1>
+        <div className={styles.group}>
+          <h2 className={styles.groupTitle}>Latest Reserves</h2>
+          {filteredBooks.length > 0 ? (
+            <ReserveAdminTable data={filteredBooks} />
+          ) : (
+            <p>No reserves found.</p>
+          )}
         </div>
+      </div>
       </Layout>
     );
   }
@@ -132,6 +141,7 @@ const ReserveAdminPage: React.FC = () => {
         <SearchBar onSearch={setQuery} />
       </div>
       <div className={styles.page}>
+      <h1 className={styles.title}>Reserves</h1>
         <div className={styles.group}>
           <h2 className={styles.groupTitle}>Latest Reserves</h2>
           {filteredBooks.length > 0 ? (

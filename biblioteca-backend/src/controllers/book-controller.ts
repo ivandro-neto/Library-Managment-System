@@ -22,14 +22,11 @@ export const getBooks = async (req: Request, res: Response) => {
 // Obter um livro por ID
 export const getBookById = async (req: Request, res: Response) => {
   const { id } = req.params;
-
   try {
     const book = await Book.findByPk(id);
-
     if (!book) {
-      return res.status(404).json({ status: 404, message: "Book not found." });
+     return res.status(404).json({ status: 404, message: "Book not found." });
     }
-
     res.status(200).json({ status: 200, data: { book } });
   } catch (error) {
     console.error(error);
@@ -39,16 +36,15 @@ export const getBookById = async (req: Request, res: Response) => {
 
 // Criar um novo livro
 export const createBook = async (req: Request, res: Response) => {
-  const { title, author, description, isbn, status, releaseDate } = req.body;
-
+  const { title, author, description, isbn, status, quantity, releaseDate } = req.body;
+  
   try {
     // Verificar se o livro já existe
     const bookExists = await Book.findOne({ where: { title } });
-
+    
     if (bookExists) {
       return res.status(400).json({ status: 400, message: "Book with this title already exists." });
     }
-
     // Criar o livro
     const newBook = await Book.create({
       title,
@@ -56,6 +52,7 @@ export const createBook = async (req: Request, res: Response) => {
       isbn,
       status,
       description,
+      quantity,
       releaseDate
     });
 
@@ -79,7 +76,7 @@ export const createBook = async (req: Request, res: Response) => {
 // Atualizar um livro
 export const updateBook = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { title, description, releaseDate } = req.body;
+  const { title, description,status, isbn, quantity, releaseDate } = req.body;
 
   try {
     const book = await Book.findByPk(id);
@@ -87,8 +84,7 @@ export const updateBook = async (req: Request, res: Response) => {
     if (!book) {
       return res.status(404).json({ status: 404, message: "Book not found." });
     }
-
-    await book.update({ title, description, releaseDate });
+    await book.update({ title, description, status, isbn, quantity, releaseDate });
     res.status(200).json({ status: 200, message: "Book updated successfully.", data: { book } });
   } catch (error) {
     console.error(error);

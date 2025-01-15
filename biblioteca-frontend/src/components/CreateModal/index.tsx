@@ -1,12 +1,12 @@
 // components/CreateBookModal/CreateBookModal.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../Modal";
 import styles from "./css/styles.module.css";
 
 interface CreateBookModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreate: (title: string,author: string, isbn: string, description: string, releaseDate: string) => void;
+  onCreate: (title: string,author: string, isbn: string, description: string, quantity: number, releaseDate: string) => void;
 }
 
 const CreateBookModal: React.FC<CreateBookModalProps> = ({ isOpen, onClose, onCreate }) => {
@@ -14,15 +14,17 @@ const CreateBookModal: React.FC<CreateBookModalProps> = ({ isOpen, onClose, onCr
   const [isbn, setIsbn] = useState("");
   const [author, setAuthor] = useState("");
   const [description, setDescription] = useState("");
+  const [quantity, setQuantity] = useState(1);
   const [releaseDate, setReleaseDate] = useState("");
 
   const handleSubmit = () => {
-    onCreate(title,author, isbn, description, releaseDate);
+    onCreate(title,author, isbn, description, quantity, releaseDate);
     onClose();
     setTitle("");
     setAuthor("");
     setIsbn("");
     setDescription("");
+    setQuantity(1);
     setReleaseDate("");
   };
 
@@ -41,6 +43,10 @@ const CreateBookModal: React.FC<CreateBookModalProps> = ({ isOpen, onClose, onCr
         <label htmlFor="state">description</label>
         <textarea id="state" value={description} onChange={(e) => setDescription(e.target.value)}>
         </textarea>
+      </div>
+      <div className={styles.formGroup}>
+        <label htmlFor="quatity">Quantity</label>
+        <input name="quatity" type="number" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} />
       </div>
       <div className={styles.formGroup}>
         <label htmlFor="ISBN">ISBN</label>

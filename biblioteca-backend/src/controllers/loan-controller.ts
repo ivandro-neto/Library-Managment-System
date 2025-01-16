@@ -84,7 +84,13 @@ export const createLoan = async (req: Request, res: Response) => {
         data: { newEntry },
       });
     } 
-      // Criar empréstimo
+    const loan = await Loan.findOne({where:{userId, bookId}})
+    if(loan)
+      return res.status(401).json({
+        status: 401,
+        message: "You cannot loan the same book twice, return the book first to make it available again.",
+      }); 
+    // Criar empréstimo
       const newLoan = await Loan.create({
         userId,
         bookId,

@@ -8,6 +8,7 @@ const HomePage: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
+        <img src="/logo.svg" alt="" loading="lazy" />
         <h1 className={styles.title}>Bem-vindo a Library App</h1>
         <p className={styles.description}>
         Gerencie sua biblioteca de forma eficiente com nossa plataforma.

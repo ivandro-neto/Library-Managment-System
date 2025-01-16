@@ -9,6 +9,11 @@ const SideNav = () => {
   const {user} = useContext(AuthContext)
   const isAdmin = user?.roles[0] === Roles.admin? true: false;
   return (
+    <section className={styles.container}>
+      <div className={styles.appName}>
+        <img src="/logo.svg" alt="" className={styles.logo} />
+        <h1>Library App</h1>
+      </div>
     <nav className={styles.navbar}>
       <ul className={styles.list}>
         <li className={styles.items}>
@@ -26,6 +31,7 @@ const SideNav = () => {
         <UserCard user={user}/>
       </div>
     </nav>
+    </section>
   )
 }
 

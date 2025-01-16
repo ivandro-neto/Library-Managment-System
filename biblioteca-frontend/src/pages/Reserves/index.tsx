@@ -7,6 +7,11 @@ import axios from "axios";
 import SearchBar from "../../components/SearchInput";
 import { Roles } from "../../utils/Roles";
 
+interface PopUp{
+  success: boolean;
+  content: string;
+}
+
 const ReservesPage: React.FC = () => {
   const { accessToken, user } = useContext(AuthContext);
   const [latestReserves, setLatestReserves] = useState([]);
@@ -14,6 +19,19 @@ const ReservesPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [filteredBooks, setFilteredBooks] = useState<any[]>([]);
   const [query, setQuery] = useState<string>('');
+  const [popupList, setPopUpList] = useState<PopUp[]>([]);
+
+useEffect(() => {
+    const timeout = setTimeout(() => {
+      setPopUpList((prevList) => {
+        const updatedList = [...prevList]; // Cria uma cópia do estado atual
+        updatedList.pop(); // Remove o último elemento
+        return updatedList; // Atualiza o estado com a nova lista
+      });
+    }, 2000);
+  
+    return () => clearTimeout(timeout); // Limpa o timeout quando o componente desmontar
+  }, [popupList]);
 
   useEffect(() => {
     if (!query) {
@@ -38,45 +56,45 @@ const ReservesPage: React.FC = () => {
   
    return differenceInDays;
   };
+  const fetchReserves = async () => {
+     
+    try {
+      const loansResponse = await axios.get(`http://localhost:3000/api/loans/${user?.id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const loans = Array.isArray(loansResponse.data.data.loan)
+        ? await Promise.all(
+            loansResponse.data.data.loan.map(async (loan) => {
+              const bookResponse = await axios.get(
+                `http://localhost:3000/api/books/${loan.bookId}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                }
+              );
+
+              return {
+                ...loan,
+                bookTitle: bookResponse.data.data.book.title,
+              };
+            })
+          )
+        : [];
+      setLatestReserves(loans);
+    } catch (err: any) {
+      console.error("Error fetching reserves:", err);
+      setError(err.response?.data?.message || "Failed to load reserves.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchReserves = async () => {
-     
-      try {
-        const loansResponse = await axios.get(`http://localhost:3000/api/loans/${user?.id}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        console.log(loansResponse)
-        const loans = Array.isArray(loansResponse.data.data.loan)
-          ? await Promise.all(
-              loansResponse.data.data.loan.map(async (loan) => {
-                const bookResponse = await axios.get(
-                  `http://localhost:3000/api/books/${loan.bookId}`,
-                  {
-                    headers: {
-                      Authorization: `Bearer ${accessToken}`,
-                    },
-                  }
-                );
-  
-                return {
-                  ...loan,
-                  bookTitle: bookResponse.data.data.book.title,
-                };
-              })
-            )
-          : [];
-        setLatestReserves(loans);
-      } catch (err: any) {
-        console.error("Error fetching reserves:", err);
-        setError(err.response?.data?.message || "Failed to load reserves.");
-      } finally {
-        setLoading(false);
-      }
-    };
-  
+    fetchReserves();
+   
     if (accessToken && user?.id) {
       fetchReserves();
     }
@@ -140,6 +158,36 @@ const ReservesPage: React.FC = () => {
     return <div>{error}</div>;
   }
 
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/api/loans/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`, // Passando o token no header
+        },
+      });
+      if(response.status < 400){
+        setPopUpList((prevList) => [
+          ...prevList,
+          { success: true, content: "Loan deleted successfully" },
+        ]);
+      }else{
+        setPopUpList((prevList) => [
+          ...prevList,
+          { success: false, content: "Error deleting the loan" },
+        ]);
+      }
+
+      fetchReserves(); // Recarregar livros após a exclusão
+      
+    } catch (error) {
+      console.error("Error deleting book:", error);
+      setPopUpList((prevList) => [
+        ...prevList,
+        { success: false, content: "Error deleting the loan" },
+      ]);
+    }
+  };
+
   return (
     <Layout>
       <div className={styles.header}>
@@ -148,8 +196,13 @@ const ReservesPage: React.FC = () => {
       <div className={styles.page}>
         <div className={styles.group}>
           <h2 className={styles.groupTitle}>Latest Reserves</h2>
-          <ReservationTable data={filteredBooks} />
+          <ReservationTable data={filteredBooks} onDelete={handleDelete}/>
         </div>
+      </div>
+      <div className={'popups'}>
+        {popupList.map(pop =>
+          <span key={pop.content} className={`popup ${pop.success ? 'success' : 'error'}`}>{pop.content}</span>
+        )}
       </div>
     </Layout>
   );

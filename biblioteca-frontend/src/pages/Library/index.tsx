@@ -4,8 +4,13 @@ import styles from './css/styles.module.css';
 import Layout from "../Layout";
 import BookContainer from "../../components/BookContainer";
 import { AuthContext } from "../../context/AuthContext";
-import { createLoan } from "../../api/book";
 import SearchBar from "../../components/SearchInput";
+import { Roles } from "../../utils/Roles";
+
+interface PopUp{
+  success: boolean;
+  content: string;
+}
 
 const LibraryPage = () => {
   const { accessToken, user } = useContext(AuthContext);
@@ -14,7 +19,19 @@ const LibraryPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [filteredBooks, setFilteredBooks] = useState<any[]>([]);
   const [query, setQuery] = useState<string>('');
+   const [popupList, setPopUpList] = useState<PopUp[]>([]);
 
+useEffect(() => {
+    const timeout = setTimeout(() => {
+      setPopUpList((prevList) => {
+        const updatedList = [...prevList]; // Cria uma cópia do estado atual
+        updatedList.pop(); // Remove o último elemento
+        return updatedList; // Atualiza o estado com a nova lista
+      });
+    }, 2000);
+  
+    return () => clearTimeout(timeout); // Limpa o timeout quando o componente desmontar
+  }, [popupList]);
   useEffect(() => {
     if (!query) {
       setFilteredBooks(books); // Exibe todos os livros se não houver consulta
@@ -35,7 +52,6 @@ const LibraryPage = () => {
           'Authorization': `Bearer ${accessToken}`,
         },
       });
-
       setBooks(response.data.data.books);
       setLoading(false);
     } catch (error) {
@@ -47,27 +63,58 @@ const LibraryPage = () => {
 
   const handleCreateLoan = async (user, book) => {
     try {
+
       const dueDate = new Date();
       dueDate.setDate(dueDate.getDate() + 15);
-
-      const result = await createLoan({
-        userId: user.id,
-        bookId: book.id,
-        dueDate,
+      const loansResponse = await axios.post('http://localhost:3000/api/loans',
+        {userId: user?.id, bookId: book.id, dueDate },
+        {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
       });
-
-        const notification = await axios.post(
-          `${apiBaseURL}/notifications`,
-          { userId: user.id, title : "You made it!",message: `You just loan the ${book.title}, due this book until ${dueDate}! Check yours reserves to see more details.`, type: "info" },
+      if(loansResponse.status < 400){
+        setPopUpList((prevList) => [
+          ...prevList,
+          { success: true, content: "Loan created successfully" },
+        ]);
+      }else{
+        setPopUpList((prevList) => [
+          ...prevList,
+          { success: false, content: "Error creating a loan" },
+        ]);
+      }
+      const notification = await axios.post(
+        'http://localhost:3000/api/notifications',
+        { userId: user.id, title : "You made it!",message: `You just loan the ${book.title}, due this book until ${dueDate}! Check yours reserves to see more details.`, type: "info" },
+        {
+          headers: { 'Authorization': `Bearer ${accessToken}` },
+        }
+      );
+      const admins = await axios.get(
+        'http://localhost:3000/api/users',
+        {
+          headers: { 'Authorization': `Bearer ${accessToken}` },
+        }
+      );
+    
+      const adminList = admins.data.data.users.filter(user => user.roles.includes(Roles['admin']))
+      adminList.forEach(async (admin) => {
+        
+        const notificationToAdmins = await axios.post(
+          'http://localhost:3000/api/notifications',
+          { userId: admin.id, title : "New Reserve was made",message: `${user?.username} just loan the ${book.title}, he should due this book until ${dueDate}! Check the reserves to see more details.`, type: "info" },
           {
             headers: { 'Authorization': `Bearer ${accessToken}` },
           }
         );
-        console.log("SENT!", notification)
-
-      console.log('Loan created successfully:', result);
+      });
     } catch (err) {
       console.error('Error creating loan:', err);
+      setPopUpList((prevList) => [
+        ...prevList,
+        { success: false, content: "Error creating a loan" },
+      ]);
     }
   };
 
@@ -80,6 +127,9 @@ const LibraryPage = () => {
   if (loading) {
     return (
       <Layout>
+        <div className={styles.header}>
+        <SearchBar onSearch={setQuery} /> 
+      </div>
         <div className={styles.container}>
           <p>Loading books...</p>
         </div>
@@ -90,9 +140,13 @@ const LibraryPage = () => {
   if (error) {
     return (
       <Layout>
-        <div className={styles.container}>
+         <div className={styles.header}>
+        <SearchBar onSearch={setQuery} /> 
+      </div>
+      <div className={styles.container}>
           <p>{error}</p>
-        </div>
+      </div>
+       
       </Layout>
     );
   }
@@ -114,6 +168,11 @@ const LibraryPage = () => {
             onReserve={() => handleCreateLoan(user, book)}
           />
         ))}
+      </div>
+      <div className={'popups'}>
+        {popupList.map(pop =>
+          <span key={pop.content} className={`popup ${pop.success ? 'success' : 'error'}`}>{pop.content}</span>
+        )}
       </div>
     </Layout>
   );

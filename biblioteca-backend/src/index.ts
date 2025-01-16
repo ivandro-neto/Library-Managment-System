@@ -16,7 +16,6 @@ app.use(express.json())
 app.use(cors({ origin: '*' }));
 
 cron.schedule('0 0 * * *', () => {
-  console.log('Checking for overdue loans...');
   checkOverdueLoans();
 });
 app.use('/api/auth', authRoutes)
@@ -38,7 +37,6 @@ const Run = async () =>{
     
     if(connection)
     {
-        console.log('Database synced successfully');
         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     }
     } catch (error) {

@@ -4,7 +4,6 @@ import { Request, Response, NextFunction } from "express";
 export const rolesValidation = (roles: Array<number>) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log("ROLE VALIDATION INIT")
       // Verifica se o usuário está no request
       //@ts-ignore
       const user = req.user;

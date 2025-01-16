@@ -7,7 +7,7 @@ interface ILoanAttributes {
   id: string;
   bookId: string;
   userId: string;
-  status: "Reserved" | "Returned" | "Late";
+  status: "reserved" | "returned" | "late";
   dueDate: Date;
   code: number;
 }
@@ -43,7 +43,7 @@ Loan.init(
     status: {
       type: DataTypes.ENUM("reserved", "returned", "late"),
       allowNull: false,
-      defaultValue: "Reserved",
+      defaultValue: "reserved",
       validate: {
         isIn: {
           args: [["reserved", "returned", "late"]],
@@ -61,7 +61,7 @@ Loan.init(
     code:{
       type: DataTypes.NUMBER,
       allowNull : false,
-      autoIncrementIdentity: true 
+      unique: true
     }
   },
   {
@@ -75,4 +75,28 @@ Loan.init(
 // Estabelecendo relação entre Loan e Book
 Loan.belongsTo(Book, { foreignKey: "bookId", as: "book" });
 
+
+async function generateUniqueDeliveryCode(): Promise<number> {
+  let codigo: number;
+  let isUnique = false;
+
+  while (!isUnique) {
+    codigo = Math.floor(100000 + Math.random() * 900000);
+
+    // Verifica no banco de dados se o código já existe
+    const existingLoan = await Loan.findOne({ where: { code: codigo } });
+    if (!existingLoan) {
+      isUnique = true;
+    }
+  }
+
+  return codigo;
+}
+
+// Hook para gerar código único antes de criar um empréstimo
+Loan.beforeValidate(async (loan) => {
+  if (!loan.code) {
+    loan.code = await generateUniqueDeliveryCode();
+  }
+});
 export default Loan;

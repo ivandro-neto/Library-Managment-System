@@ -9,7 +9,7 @@ interface User {
 interface AuthContextProps {
   user: User | null;
   accessToken: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   logout: () => void;
   refreshAccessToken: () => Promise<void>;
 }
@@ -44,9 +44,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const decodedToken: any = JSON.parse(atob(accessToken.split(".")[1]));
       const user = { username: decodedToken.username, email:decodedToken.email, roles: decodedToken.roles };
-
       persistAuthData(accessToken, user);
       localStorage.setItem("refreshToken", refreshToken);
+      if(!user)
+        return null;
+      return user;
     } catch (error) {
       console.error("Login failed:", error);
       throw new Error("Invalid credentials.");

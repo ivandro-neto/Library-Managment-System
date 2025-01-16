@@ -12,6 +12,8 @@ type Reservation = {
 
 type ReservationTableProps = {
   data: Reservation[];
+  onValidate: (id: string) => void;
+  
 };
 
 
@@ -53,7 +55,7 @@ const getRemainingDaysClass = (remainingDays: string): string => {
   return styles.grayText;
 };
 
-const ReservationTable: React.FC<ReservationTableProps> = ({ data }) => {
+const ReservationTable: React.FC<ReservationTableProps> = ({ data, onValidate }) => {
   return (
     <div className={styles.scrollable}>
       <table className={styles.table}>
@@ -82,7 +84,7 @@ const ReservationTable: React.FC<ReservationTableProps> = ({ data }) => {
                 {calculateRemainingDays(reservation.dueDate)}
               </td>
               <td className={styles.cell}>
-                <button type="button" className={styles.validationButton} onClick={() => alert("Hey")}> <img src="/icons/check.svg" alt="" /> Validate</button>
+                <button type="button" className={styles.validationButton} onClick={()=> onValidate(reservation.id)}> <img src="/icons/check.svg" alt="" /> Validate</button>
               </td>
             </tr>
           ))}

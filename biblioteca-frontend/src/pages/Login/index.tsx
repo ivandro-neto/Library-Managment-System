@@ -15,14 +15,16 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setError(null);
     try {
-      await login(email, password);
-
-      if (user?.roles.includes(Roles.user)) {
+      const result = await login(email, password);
+      const loggedUser = user != null ? user : result
+      if(!loggedUser)
+        setError("Login failed. Check your credentials.");
+      
+      if (loggedUser.roles.includes(Roles.user)) {
         navigate("/library");
-      } else if (user?.roles.includes(Roles.admin)) {
+      }
+       if (loggedUser.roles.includes(Roles.admin)) {
         navigate("/admin/library");
-      } else {
-        setError("Invalid role assigned to the user.");
       }
     } catch (error) {
       setError("Login failed. Check your credentials.");

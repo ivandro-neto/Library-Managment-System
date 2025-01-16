@@ -11,11 +11,18 @@ import SearchBar from "../../components/SearchInput";
 import styles from './css/styles.module.css'
 const apiBaseURL = "http://localhost:3000/api"; // Ajuste conforme necessário
 
+interface PopUp{
+  success: boolean;
+  content: string;
+}
+
 const LibraryPage: React.FC = () => {
   const [books, setBooks] = useState<any[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [popupList, setPopUpList] = useState<PopUp[]>([]);
+  
   const [selectedBook, setSelectedBook] = useState<any>(null);
   const { accessToken } = useContext(AuthContext);
   const [filteredBooks, setFilteredBooks] = useState<any[]>([]);
@@ -39,12 +46,25 @@ const LibraryPage: React.FC = () => {
           'Authorization': `Bearer ${accessToken}`, // Passando o token no header
         },
       });
+      if(response.status === 404)
+        setBooks(response.data)
       setBooks(response.data.data.books);
     } catch (error) {
       console.error("Error fetching books:", error);
     }
   };
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setPopUpList((prevList) => {
+        const updatedList = [...prevList]; // Cria uma cópia do estado atual
+        updatedList.pop(); // Remove o último elemento
+        return updatedList; // Atualiza o estado com a nova lista
+      });
+    }, 2000);
+  
+    return () => clearTimeout(timeout); // Limpa o timeout quando o componente desmontar
+  }, [popupList]);
   // Carregar livros quando o componente for montado ou quando o token mudar
   useEffect(() => {
     if (accessToken) {
@@ -63,8 +83,17 @@ const LibraryPage: React.FC = () => {
         }
       );
 
-      console.log(response)
-
+      if(response.status < 400){
+        setPopUpList((prevList) => [
+          ...prevList,
+          { success: true, content: "Book created successfully" },
+        ]);
+      }else{
+        setPopUpList((prevList) => [
+          ...prevList,
+          { success: false, content: "Error creating the book" },
+        ]);
+      }
       const result = await axios.get(
         `${apiBaseURL}/users`,
         {
@@ -83,42 +112,75 @@ const LibraryPage: React.FC = () => {
             headers: { 'Authorization': `Bearer ${accessToken}` },
           }
         );
-        console.log("SENT!", notification)
       }
 
       fetchBooks(); // Recarregar livros após a criação
     } catch (error) {
       console.error("Error creating book:", error);
+      setPopUpList((prevList) => [
+        ...prevList,
+        { success: false, content: "Error creating the book" },
+      ]);
     }
   };
 
   // Atualizar livro
   const handleUpdate = async (id: string, title: string, author: string, isbn: string, description: string, quantity:number, status: string, releaseDate: string) => {
     try {
-      await axios.put(
+      const response = await axios.put(
         `${apiBaseURL}/books/${id}`,
         { title,author, isbn, description, status, quantity, releaseDate },
         { headers: { 'Authorization': `Bearer ${accessToken}` } }
       );
       handleClose();
+      if(response.status < 400){
+        setPopUpList((prevList) => [
+          ...prevList,
+          { success: true, content: "Book updated successfully" },
+        ]);
+      }else{
+        setPopUpList((prevList) => [
+          ...prevList,
+          { success: false, content: "Error updating the book" },
+        ]);
+      }
       fetchBooks(); // Recarregar livros após a atualização
     } catch (error) {
-      console.error("Error updating book:", error);
+      console.error("Error updating the book:", error);
+      setPopUpList((prevList) => [
+        ...prevList,
+        { success: false, content: "Error updating the book" },
+      ]);
     }
   };
 
   // Deletar livro
   const handleDelete = async () => {
     try {
-      await axios.delete(`${apiBaseURL}/books/${selectedBook.id}`, {
+      const response = await axios.delete(`${apiBaseURL}/books/${selectedBook.id}`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`, // Passando o token no header
         },
       });
       fetchBooks(); // Recarregar livros após a exclusão
       setIsDeleteModalOpen(false);
+      if(response.status < 400){
+        setPopUpList((prevList) => [
+          ...prevList,
+          { success: true, content: "Book updated successfully" },
+        ]);
+      }else{
+        setPopUpList((prevList) => [
+          ...prevList,
+          { success: false, content: "Error updating the book" },
+        ]);
+      }
     } catch (error) {
       console.error("Error deleting book:", error);
+      setPopUpList((prevList) => [
+        ...prevList,
+        { success: false, content: "Error deleting book" },
+      ]);
     }
   };
   const handleClose = () =>{
@@ -161,6 +223,11 @@ const LibraryPage: React.FC = () => {
           onClose={() => setIsDeleteModalOpen(false)}
           onConfirm={handleDelete}
         />
+      </div>
+      <div className={'popups'}>
+        {popupList.map(pop =>
+          <span key={pop.content} className={`popup ${pop.success ? 'success' : 'error'}`}>{pop.content}</span>
+        )}
       </div>
     </Layout>
   );

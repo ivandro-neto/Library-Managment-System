@@ -20,6 +20,6 @@ router.get("/loans/:id", authMiddleware, rolesValidation([Roles.user, Roles.admi
 router.post("/loans", authMiddleware, rolesValidation([Roles.user, Roles.admin]), createLoan);
 router.put("/loans/:id", authMiddleware, rolesValidation([Roles.user, Roles.admin]), updateLoan);
 router.delete("/loans/:id", authMiddleware, rolesValidation([Roles.user, Roles.admin]), deleteLoan);
-router.post("/loans/:id", authMiddleware, rolesValidation([Roles.admin]), validateLoan);
+router.post("/loans/:id/validate", authMiddleware, rolesValidation([Roles.admin]), validateLoan);
 
 export default router;

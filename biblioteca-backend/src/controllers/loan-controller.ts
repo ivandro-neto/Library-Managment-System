@@ -68,7 +68,7 @@ export const createLoan = async (req: Request, res: Response) => {
         message: "Book not found.",
       });
     }
-    if(book.quantity <= 0)
+    if(book.quantity < 1)
       await book.update({status : 'reserved'});
     // Verificar se o livro está disponível
     if (book.status === 'reserved') {
@@ -91,8 +91,8 @@ export const createLoan = async (req: Request, res: Response) => {
         dueDate,
       });
 
-      // Atualizar o status do livro
-      await book.update({ quantity: book.quantity-- });
+     const bookQnt =  book.quantity-1;
+      await book.update({ quantity: bookQnt, status: bookQnt < 1 ? 'reserved': book.status});
       
       return res.status(201).json({
         status: 201,
@@ -140,7 +140,9 @@ export const deleteLoan = async (req: Request, res: Response) => {
     if (!loan) {
       return res.status(404).json({ status: 404, message: "Loan not found." });
     }
-
+    const book = await Book.findByPk(loan.bookId);
+    const bookQnt = book.quantity +1;
+    await book?.update({quantity: bookQnt, status : 'available'});
     await loan.destroy();
     res.status(200).json({ status: 200, message: "Loan deleted successfully." });
   } catch (error) {
@@ -163,8 +165,11 @@ export const validateLoan = async (req: Request, res: Response) => {
     if (code !== loan.code) {
       return res.status(401).json({ status: 401, message: "Invalide code." });
     }
-    await loan.update({status: 'returned'});
-    await book?.update({quantity: book.quantity++, status : 'available'});
+    if(loan.status === 'returned')
+      return res.status(401).json({ status: 401, message: "You already returned this book." });
+    await loan.update({status: 'returned', dueDate: new Date()});
+    const bookQnt = book.quantity +1;
+    await book?.update({quantity: bookQnt, status : 'available'});
     res.status(200).json({ status: 200, message: "Loan returned successfully." });
   } catch (error) {
     console.error(error);

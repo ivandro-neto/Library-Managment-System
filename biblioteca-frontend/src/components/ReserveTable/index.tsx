@@ -13,6 +13,7 @@ type Reservation = {
 
 type ReservationTableProps = {
   data: Reservation[];
+  onDelete : (id) => void
 };
 
 const getStatusClass = (status: string): string => {
@@ -52,7 +53,10 @@ const getRemainingDaysClass = (remainingDays: string): string => {
   return styles.grayText;
 };
 
-const ReservationTable: React.FC<ReservationTableProps> = ({ data }) => {
+  // Deletar livro
+ 
+
+const ReservationTable: React.FC<ReservationTableProps> = ({ data, onDelete }) => {
   return (
     <div className={styles.scrollable}>
       <table className={styles.table}>
@@ -63,6 +67,7 @@ const ReservationTable: React.FC<ReservationTableProps> = ({ data }) => {
             <th className={styles.headerCell}>Due Date</th>
             <th className={styles.headerCell}>Remaining Days</th>
             <th className={styles.headerCell}>Delivery Code</th>
+            <th className={styles.headerCell}>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -81,6 +86,9 @@ const ReservationTable: React.FC<ReservationTableProps> = ({ data }) => {
                 {calculateRemainingDays(reservation.dueDate)}
               </td>
               <td className={styles.cell}>{reservation.code}</td>
+              <td className={styles.cell}><button type="button" className={styles.deleteButton} onClick={() => onDelete(reservation.id)}>
+                  🗑️
+                </button></td>
             </tr>
           ))}
         </tbody>

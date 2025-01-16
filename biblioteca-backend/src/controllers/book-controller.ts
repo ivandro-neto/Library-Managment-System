@@ -2,6 +2,8 @@ import Book from "../models/Book";
 import type { Request, Response } from "express";
 import Notification from "../models/Notification";
 import User from "../models/User";
+import Loan from "../models/Loan";
+import Waitlist from "../models/WaitList";
 
 // Listar todos os livros
 export const getBooks = async (req: Request, res: Response) => {
@@ -9,7 +11,7 @@ export const getBooks = async (req: Request, res: Response) => {
     const books = await Book.findAll();
 
     if (books.length === 0) {
-      return res.status(404).json({ status: 404, message: "No books found." });
+      return res.status(404).json({ status: 404, message: "No books found.", data:[] });
     }
 
     res.status(200).json({ status: 200, data: { books } });
@@ -102,7 +104,8 @@ export const deleteBook = async (req: Request, res: Response) => {
     if (!book) {
       return res.status(404).json({ status: 404, message: "Book not found." });
     }
-
+    await Waitlist.destroy({where : {bookId: id }})
+    await Loan.destroy({where : {bookId: id }})
     await book.destroy();
     res.status(200).json({ status: 200, message: "Book deleted successfully." });
   } catch (error) {

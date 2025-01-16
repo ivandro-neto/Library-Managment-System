@@ -10,7 +10,6 @@ interface ILayoutProps{
 
 const Layout: React.FC<ILayoutProps> = ({children}) => {
   const handleSearch = (query: string) => {
-    console.log('Search query:', query);
     // Perform search logic (e.g., API call or filter a book list)
   };
   return(

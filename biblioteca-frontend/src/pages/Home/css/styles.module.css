@@ -21,7 +21,7 @@
   left: 0;
   height: 100dvh;
   z-index: -2;
-  transform: rotate(45deg) translate(-60dvw, 40dvh);
+  transform: rotate(45deg) translate(-70dvw, 20dvh);
   background: url(/public/bg.jpg);
   background-position: center;
   background-repeat: no-repeat;
@@ -39,7 +39,7 @@
   left: 0;
   height: 100dvh;
   z-index: -2;
-  transform: rotate(45deg) translate(60dvw, -40dvh);
+  transform: rotate(45deg) translate(70dvw, -20dvh);
   background: url(/public/bg.jpg);
   background-position: center;
   background-repeat: no-repeat;
@@ -51,11 +51,10 @@
 .content {
   position: relative;
   text-align: center;
-  max-width: 600px;
+  max-width: 700px;
   background: rgba(255, 255, 255, 0.5);
   padding: 2rem 3rem;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
 .content::before{

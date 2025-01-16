@@ -6,7 +6,6 @@ dotenv.config()
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) : Promise<Response> =>{
   try{
-    console.log("AUTH INIT")
 
     const authHeader = req.headers["authorization"] || req.headers["Authorization"]
     const token = authHeader && authHeader.split(' ')[1]

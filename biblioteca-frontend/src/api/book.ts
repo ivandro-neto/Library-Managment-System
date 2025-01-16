@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiBaseURL = "http://localhost:3000/api"; // Defina a URL da sua API
+const apiBaseURL = "https://library-managment-system-am61.onrender.com/api"; // Defina a URL da sua API
 
 // Buscar um livro por ID
 export const fetchBookById = async (id: string) => {
@@ -21,7 +21,7 @@ export const createLoan = async ({ userId, book }: LoanData) => {
   try {
       const dueDate = new Date();
       dueDate.setDate(dueDate.getDate() + 15);
-      const response = await axios.post('http://localhost:3000/api/loans',
+      const response = await axios.post('https://library-managment-system-am61.onrender.com/api/loans',
         {userId, bookId: book.id, dueDate },
         {
           headers: {
@@ -30,7 +30,7 @@ export const createLoan = async ({ userId, book }: LoanData) => {
        }
     );
       const notification = await axios.post(
-        'http://localhost:3000/api/notifications',
+        'https://library-managment-system-am61.onrender.com/api/notifications',
         { userId: user?.id, title : "You made it!",message: `You just loan the ${book?.title}, due this book until ${dueDate}! Check yours reserves to see more details.`, type: "info" },
         {
           headers: { Authorization: `Bearer ${token}` },

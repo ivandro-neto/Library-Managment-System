@@ -15,7 +15,7 @@ const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
-  const apiBaseURL = "http://localhost:3000/api/auth";
+  const apiBaseURL = "https://library-managment-system-am61.onrender.com/api/auth";
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -43,7 +43,7 @@ useEffect(() => {
     }
   }, [query, books]);
 
-  const apiBaseURL = "http://localhost:3000/api";
+  const apiBaseURL = "https://library-managment-system-am61.onrender.com/api";
 
   const fetchBooks = async () => {
     try {
@@ -66,7 +66,7 @@ useEffect(() => {
 
       const dueDate = new Date();
       dueDate.setDate(dueDate.getDate() + 15);
-      const loansResponse = await axios.post('http://localhost:3000/api/loans',
+      const loansResponse = await axios.post('https://library-managment-system-am61.onrender.com/api/loans',
         {userId: user?.id, bookId: book.id, dueDate },
         {
         headers: {
@@ -85,14 +85,14 @@ useEffect(() => {
         ]);
       }
       const notification = await axios.post(
-        'http://localhost:3000/api/notifications',
+        'https://library-managment-system-am61.onrender.com/api/notifications',
         { userId: user.id, title : "You made it!",message: `You just loan the ${book.title}, due this book until ${dueDate}! Check yours reserves to see more details.`, type: "info" },
         {
           headers: { 'Authorization': `Bearer ${accessToken}` },
         }
       );
       const admins = await axios.get(
-        'http://localhost:3000/api/users',
+        'https://library-managment-system-am61.onrender.com/api/users',
         {
           headers: { 'Authorization': `Bearer ${accessToken}` },
         }
@@ -102,7 +102,7 @@ useEffect(() => {
       adminList.forEach(async (admin) => {
         
         const notificationToAdmins = await axios.post(
-          'http://localhost:3000/api/notifications',
+          'https://library-managment-system-am61.onrender.com/api/notifications',
           { userId: admin.id, title : "New Reserve was made",message: `${user?.username} just loan the ${book.title}, he should due this book until ${dueDate}! Check the reserves to see more details.`, type: "info" },
           {
             headers: { 'Authorization': `Bearer ${accessToken}` },

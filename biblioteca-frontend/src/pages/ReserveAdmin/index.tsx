@@ -45,14 +45,14 @@ useEffect(() => {
   // Busca reservas da API
   const fetchReserves = async () => {
     try {
-      const loansResponse = await axios.get(`http://localhost:3000/api/loans`, {
+      const loansResponse = await axios.get(`https://library-managment-system-am61.onrender.com/api/loans`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
       const loans = await Promise.all(
         loansResponse.data.data.loans.map(async (loan) => {
           const bookResponse = await axios.get(
-            `http://localhost:3000/api/books/${loan.bookId}`,
+            `https://library-managment-system-am61.onrender.com/api/books/${loan.bookId}`,
             {
               headers: { Authorization: `Bearer ${accessToken}` },
             }
@@ -78,7 +78,7 @@ useEffect(() => {
 
         if (remainingDays <= 0) {
           await axios.post(
-            "http://localhost:3000/api/notifications",
+            "https://library-managment-system-am61.onrender.com/api/notifications",
             {
               userId: user?.id,
               title: "Due late alert!",
@@ -89,7 +89,7 @@ useEffect(() => {
           );
 
           await axios.post(
-            "http://localhost:3000/api/notifications",
+            "https://library-managment-system-am61.onrender.com/api/notifications",
             {
               userId: loan.userId,
               title: "Due late alert!",
@@ -160,7 +160,7 @@ useEffect(() => {
   const handleValidation = async (code: number) => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/loans/${reserveId}/validate`,
+        `https://library-managment-system-am61.onrender.com/api/loans/${reserveId}/validate`,
         { code },
         {
           headers: { 'Authorization': `Bearer ${accessToken}` },
@@ -179,7 +179,7 @@ useEffect(() => {
         ]);
       }
       const result = await axios.get(
-        'http://localhost:3000/api/users',
+        'https://library-managment-system-am61.onrender.com/api/users',
         {
           headers: { 'Authorization': `Bearer ${accessToken}` },
         }
@@ -188,7 +188,7 @@ useEffect(() => {
       const book = latestReserves.filter(reserve => reserve.id === reserveId)[0];
       for (let u = 0; u < commonUsers.length; u++) {
         const notification = await axios.post(
-          'http://localhost:3000/api/notifications',
+          'https://library-managment-system-am61.onrender.com/api/notifications',
           { userId: commonUsers[u].id, title : "A book was returned!",message: `Check out the ${book.bookTitle}, it's available again!`, type: "info" },
           {
             headers: { 'Authorization': `Bearer ${accessToken}` },
@@ -198,7 +198,7 @@ useEffect(() => {
       const admins = result.data.data.users.filter(user => user.roles.includes(Roles.admin))
       for (let u = 0; u < admins.length; u++) {
         const notification = await axios.post(
-          'http://localhost:3000/api/notifications',
+          'https://library-managment-system-am61.onrender.com/api/notifications',
           { userId: admins[u].id, title : "A book was returned!",message: `Check out the ${book.bookTitle}, it's available again!`, type: "info" },
           {
             headers: { 'Authorization': `Bearer ${accessToken}` },

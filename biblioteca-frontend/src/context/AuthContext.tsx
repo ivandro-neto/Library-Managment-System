@@ -26,7 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
   const [user, setUser] = useState<User | null>(JSON.parse(localStorage.getItem("user") || "null"));
 
-  const apiBaseURL = "http://localhost:3000/api/auth";
+  const apiBaseURL = "https://library-managment-system-am61.onrender.com/api/auth";
 
   // Persist data securely
   const persistAuthData = (accessToken: string, user: User) => {

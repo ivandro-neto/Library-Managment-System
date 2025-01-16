@@ -24,7 +24,7 @@ const InboxPage: React.FC = () => {
 
   const fetchNotifications = async () => {
     try {
-      const apiBaseURL = "http://localhost:3000/api";  // Ajuste a URL base conforme necessário
+      const apiBaseURL = "https://library-managment-system-am61.onrender.com/api";  // Ajuste a URL base conforme necessário
       const response = await axios.get(`${apiBaseURL}/notifications/${user?.id}`,
         {
           headers: {

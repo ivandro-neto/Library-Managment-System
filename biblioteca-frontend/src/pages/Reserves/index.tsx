@@ -59,7 +59,7 @@ useEffect(() => {
   const fetchReserves = async () => {
      
     try {
-      const loansResponse = await axios.get(`http://localhost:3000/api/loans/${user?.id}`, {
+      const loansResponse = await axios.get(`https://library-managment-system-am61.onrender.com/api/loans/${user?.id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -68,7 +68,7 @@ useEffect(() => {
         ? await Promise.all(
             loansResponse.data.data.loan.map(async (loan) => {
               const bookResponse = await axios.get(
-                `http://localhost:3000/api/books/${loan.bookId}`,
+                `https://library-managment-system-am61.onrender.com/api/books/${loan.bookId}`,
                 {
                   headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -103,7 +103,7 @@ useEffect(() => {
   useEffect(() => {
     const sendNotifications = async () => {
       try {
-        const result = await axios.get('http://localhost:3000/api/users', {
+        const result = await axios.get('https://library-managment-system-am61.onrender.com/api/users', {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
   
@@ -114,7 +114,7 @@ useEffect(() => {
   
           if (remainingDays <= 0) {
             await axios.post(
-              'http://localhost:3000/api/notifications',
+              'https://library-managment-system-am61.onrender.com/api/notifications',
               {
                 userId: admin.id,
                 title: 'Due late alert!',
@@ -127,7 +127,7 @@ useEffect(() => {
             );
   
             await axios.post(
-              'http://localhost:3000/api/notifications',
+              'https://library-managment-system-am61.onrender.com/api/notifications',
               {
                 userId: user?.id,
                 title: 'Due late alert!',
@@ -160,7 +160,7 @@ useEffect(() => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:3000/api/loans/${id}`, {
+      const response = await axios.delete(`https://library-managment-system-am61.onrender.com/api/loans/${id}`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`, // Passando o token no header
         },

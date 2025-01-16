@@ -25,7 +25,7 @@ const BookPage = () => {
       try {
         // Busca do livro
         const response = await axios.get(
-          `http://localhost:3000/api/books/${id}`,
+          `https://library-managment-system-am61.onrender.com/api/books/${id}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -36,7 +36,7 @@ const BookPage = () => {
         if (user?.roles[0] === Roles.admin) {
           // Busca da lista de espera
           const result = await axios.get(
-            `http://localhost:3000/api/waitlist/${id}`,
+            `https://library-managment-system-am61.onrender.com/api/waitlist/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -49,7 +49,7 @@ const BookPage = () => {
             result?.data.data.waitlist.map(async (waiter) => {
               try {
                 const userResponse = await axios.get(
-                  `http://localhost:3000/api/users/${waiter.userId}`,
+                  `https://library-managment-system-am61.onrender.com/api/users/${waiter.userId}`,
                   {
                     headers: {
                       Authorization: `Bearer ${accessToken}`,
@@ -102,7 +102,7 @@ const BookPage = () => {
     try{
       const dueDate = new Date();
       dueDate.setDate(dueDate.getDate() + 15);
-      const loansResponse = await axios.post('http://localhost:3000/api/loans',
+      const loansResponse = await axios.post('https://library-managment-system-am61.onrender.com/api/loans',
         {userId: user?.id, bookId: id, dueDate },
         {
         headers: {
@@ -121,14 +121,14 @@ const BookPage = () => {
         ]);
       }
       const notificationToUser = await axios.post(
-        'http://localhost:3000/api/notifications',
+        'https://library-managment-system-am61.onrender.com/api/notifications',
         { userId: user.id, title : "You made it!",message: `You just loan the ${book.title}, due this book until ${dueDate}! Check yours reserves to see more details.`, type: "info" },
         {
           headers: { 'Authorization': `Bearer ${accessToken}` },
         }
       );
       const admins = await axios.get(
-        'http://localhost:3000/api/users',
+        'https://library-managment-system-am61.onrender.com/api/users',
         {
           headers: { 'Authorization': `Bearer ${accessToken}` },
         }
@@ -138,7 +138,7 @@ const BookPage = () => {
       adminList.forEach(async (admin) => {
         
         const notificationToAdmins = await axios.post(
-          'http://localhost:3000/api/notifications',
+          'https://library-managment-system-am61.onrender.com/api/notifications',
           { userId: admin.id, title : "New Reserve was made",message: `${user?.username} just loan the ${book.title}, he should due this book until ${dueDate}! Check the reserves to see more details.`, type: "info" },
           {
             headers: { 'Authorization': `Bearer ${accessToken}` },

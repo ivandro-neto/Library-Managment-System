@@ -9,6 +9,7 @@ interface ILoanAttributes {
   userId: string;
   status: "Reserved" | "Returned" | "Late";
   dueDate: Date;
+  code: number;
 }
 
 // Interface para criação parcial (sem `id`, gerado automaticamente)
@@ -40,12 +41,12 @@ Loan.init(
       },
     },
     status: {
-      type: DataTypes.ENUM("Reserved", "Returned", "Late"),
+      type: DataTypes.ENUM("reserved", "returned", "late"),
       allowNull: false,
       defaultValue: "Reserved",
       validate: {
         isIn: {
-          args: [["Reserved", "Returned", "Late"]],
+          args: [["reserved", "returned", "late"]],
           msg: "Invalid status. Allowed values: Reserved, Returned, Late",
         },
       },
@@ -57,6 +58,11 @@ Loan.init(
         isDate: { msg: "The due date must be a valid date" },
       },
     },
+    code:{
+      type: DataTypes.NUMBER,
+      allowNull : false,
+      autoIncrementIdentity: true 
+    }
   },
   {
     sequelize,

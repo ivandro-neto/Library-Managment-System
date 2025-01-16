@@ -19,7 +19,7 @@ const BookContainer = ({url, image, title, author, status, onReserve }: BookCont
       <div className={styles.details}>
         <p className={styles.title}>{title} - {author}</p>
         <div className={styles.row}>
-          <span className={`${styles.status} ${status === 'Available' ? styles.available : styles.unavailable}`}>
+          <span className={`${styles.status} ${status !== 'out of stock' ? styles.available : styles.unavailable}`}>
             {status}
           </span>
           <LinkButton url={`/book/${url}`} content={"View"}/>

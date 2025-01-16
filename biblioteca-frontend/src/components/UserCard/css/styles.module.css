@@ -12,4 +12,29 @@
   outline: none;
   cursor: pointer;
   border: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50px;
+  transition: background-color 300ms;
+}
+
+.exit:hover{
+  background-color: #be0c0c;
+}
+
+.exit:hover img{
+  filter: invert(1);
+  animation: shake ease 300ms;
+}
+
+@keyframes shake {
+  0%{
+    transform: rotate(30deg);
+  }
+  50%{
+    transform: rotate(-30deg);
+  }
+  100%{
+    transform: rotate(0deg);
+  }
 }

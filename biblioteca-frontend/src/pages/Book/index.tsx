@@ -80,8 +80,21 @@ const BookPage = () => {
     return <p className={styles.notFound}>Book not found.</p>;
   }
 
-  const handleReserve = () => {
-    alert(`You have reserved the book: ${book.title}`);
+  const handleReserve = async () => {
+    try{
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + 15);
+      const loansResponse = await axios.post('http://localhost:3000/api/loans',
+        {userId: user?.id, bookId: id, dueDate },
+        {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      });
+      console.log(loansResponse)
+    }catch(err){
+      console.error(err?.message)
+    }
   };
 
   return (

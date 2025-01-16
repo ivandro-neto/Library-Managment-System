@@ -6,7 +6,12 @@
   gap: 2rem;
 
 }
-
+.header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
 .group {
   display: flex;
   width: 100%;

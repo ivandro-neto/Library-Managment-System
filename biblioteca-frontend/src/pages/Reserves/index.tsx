@@ -41,13 +41,14 @@ const ReservesPage: React.FC = () => {
 
   useEffect(() => {
     const fetchReserves = async () => {
+     
       try {
         const loansResponse = await axios.get(`http://localhost:3000/api/loans/${user?.id}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-  
+        console.log(loansResponse)
         const loans = Array.isArray(loansResponse.data.data.loan)
           ? await Promise.all(
               loansResponse.data.data.loan.map(async (loan) => {
@@ -67,7 +68,6 @@ const ReservesPage: React.FC = () => {
               })
             )
           : [];
-        console.log(loans)
         setLatestReserves(loans);
       } catch (err: any) {
         console.error("Error fetching reserves:", err);

@@ -19,6 +19,7 @@
   overflow-y: auto; /* Adiciona rolagem caso o conteúdo ultrapasse a altura da tela */
   padding: 1rem;
   width: 100%;
+  min-height: 100dvh;
   background-color: #f9f9f9; /* Cor de fundo para o main */
 }
 .header{

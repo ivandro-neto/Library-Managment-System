@@ -22,10 +22,9 @@ export const getLoans = async (req: Request, res: Response) => {
 
 // Obter um empréstimo por ID
 export const getLoanByUserId = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-
+  const { id } = req.params;
   try {
-    const loan = await Loan.findAll({where: { userId}});
+    const loan = await Loan.findAll({where: {userId : id}});
 
     if (!loan) {
       return res.status(404).json({ status: 404, message: "Loan not found." });
@@ -70,9 +69,9 @@ export const createLoan = async (req: Request, res: Response) => {
       });
     }
     if(book.quantity <= 0)
-      await book.update({status : 'unavailable'});
+      await book.update({status : 'reserved'});
     // Verificar se o livro está disponível
-    if (book.status === 'unavailable') {
+    if (book.status === 'reserved') {
       // Adicionar à lista de espera
       const newEntry = await Waitlist.create({
         userId,
@@ -84,7 +83,7 @@ export const createLoan = async (req: Request, res: Response) => {
         message: "You joined the waitlist for this book.",
         data: { newEntry },
       });
-    } else {
+    } 
       // Criar empréstimo
       const newLoan = await Loan.create({
         userId,
@@ -100,7 +99,7 @@ export const createLoan = async (req: Request, res: Response) => {
         message: "Loan created successfully.",
         data: { newLoan },
       });
-    }
+    
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -147,5 +146,28 @@ export const deleteLoan = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ status: 500, message: "Error deleting the loan.", error: error.message });
+  }
+};
+
+export const validateLoan = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const {code} = req.body;
+
+  try {
+    const loan = await Loan.findByPk(id);
+
+    if (!loan) {
+      return res.status(404).json({ status: 404, message: "Loan not found." });
+    }
+    const book = await Book.findByPk(loan.bookId);
+    if (code !== loan.code) {
+      return res.status(401).json({ status: 401, message: "Invalide code." });
+    }
+    await loan.update({status: 'returned'});
+    await book?.update({quantity: book.quantity++, status : 'available'});
+    res.status(200).json({ status: 200, message: "Loan returned successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: 500, message: "Error returning the loan.", error: error.message });
   }
 };

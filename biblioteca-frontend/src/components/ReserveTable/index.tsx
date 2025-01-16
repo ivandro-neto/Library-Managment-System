@@ -8,7 +8,7 @@ type Reservation = {
   status: "Reserved" | "waiting" | "Returned";
   dueDate: string;
   remainingDays: string;
-  deliveryCode: string;
+  code: number;
 };
 
 type ReservationTableProps = {
@@ -17,11 +17,11 @@ type ReservationTableProps = {
 
 const getStatusClass = (status: string): string => {
   switch (status) {
-    case "Reserved":
+    case "reserved":
       return styles.greenText;
     case "waiting":
       return styles.orangeText;
-    case "Returned":
+    case "returned":
       return styles.grayText;
     default:
       return "";
@@ -80,7 +80,7 @@ const ReservationTable: React.FC<ReservationTableProps> = ({ data }) => {
               <td className={`${styles.cell} ${getRemainingDaysClass(calculateRemainingDays(reservation.dueDate))}`}>
                 {calculateRemainingDays(reservation.dueDate)}
               </td>
-              <td className={styles.cell}>{reservation.deliveryCode}</td>
+              <td className={styles.cell}>{reservation.code}</td>
             </tr>
           ))}
         </tbody>

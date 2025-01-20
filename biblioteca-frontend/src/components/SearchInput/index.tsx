@@ -20,7 +20,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
   return (
     <div className={styles.searchBar}>
-      <span className={styles.icon}><img src="icons/search.svg" alt="" /></span>
+      <span className={styles.icon}><img src="/icons/search.svg" alt="" /></span>
       <input
         type="text"
         value={query}

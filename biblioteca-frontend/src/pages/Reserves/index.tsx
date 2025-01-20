@@ -151,11 +151,39 @@ useEffect(() => {
   }, [latestReserves, accessToken, user]);
   
       if (loading) {
-        return <div>Loading...</div>;
+        return (
+          <Layout>
+            <div className={styles.header}>
+              <SearchBar onSearch={setQuery} /> {/* Passa a função para atualizar a query */}
+            </div>
+            <div className={styles.page}>
+            <div>Loading...</div>
+            </div>
+            <div className={'popups'}>
+              {popupList.map(pop =>
+                <span key={pop.content} className={`popup ${pop.success ? 'success' : 'error'}`}>{pop.content}</span>
+              )}
+            </div>
+          </Layout>
+          );
       }
       
   if (error) {
-    return <div>{error}</div>;
+    return (
+    <Layout>
+      <div className={styles.header}>
+        <SearchBar onSearch={setQuery} /> {/* Passa a função para atualizar a query */}
+      </div>
+      <div className={styles.page}>
+      <div>{error}</div>
+      </div>
+      <div className={'popups'}>
+        {popupList.map(pop =>
+          <span key={pop.content} className={`popup ${pop.success ? 'success' : 'error'}`}>{pop.content}</span>
+        )}
+      </div>
+    </Layout>
+    );
   }
 
   const handleDelete = async (id) => {
